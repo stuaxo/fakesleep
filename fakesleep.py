@@ -57,3 +57,12 @@ def monkey_restore():
     
     global epoch
     epoch = None
+    
+@contextmanager
+def fakesleep():
+    """
+    Context manager to temporarily patch sleep functions.
+    """
+    fakesleep.monkey_patch()
+    yield
+    fakesleep.monkey_unpatch()
