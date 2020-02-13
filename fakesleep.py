@@ -1,5 +1,6 @@
 """provides a fake sleep() for use in tests"""
 
+import contextlib
 import time as time_mod
 
 originals = {name: getattr(time_mod, name) for name in
@@ -57,3 +58,10 @@ def monkey_restore():
     
     global epoch
     epoch = None
+    
+@contextlib.contextmanager
+def fakesleep_context():
+    fakesleep.monkey_patch()
+    yield
+    fakesleep.monkey_restore()
+  
