@@ -6,6 +6,7 @@ originals = {name: getattr(time_mod, name) for name in
              ['time', 'sleep', 'gmtime', 'localtime', 'ctime', 'asctime', 'strftime']}
 
 epoch = None #: the fake current time
+duration = None #: None, or seconds to advance each sleep
 
 def reset(seconds=None):
     """reset the global fake time to the real current time
@@ -20,9 +21,12 @@ reset()
 def time():
     return epoch
 
-def sleep(seconds):
+def sleep(seconds):  
     global epoch
-    epoch += seconds
+    if duration is not None:
+        epoch += duration
+    else:
+        epoch += seconds
 
 def gmtime(seconds=None):
     return originals['gmtime'](seconds if seconds is not None else epoch)
@@ -39,9 +43,10 @@ def asctime(t=None):
 def strftime(format, t=None):
     return originals['strftime'](format, t if t is not None else localtime())    
 
-def monkey_patch():
+def monkey_patch(fixed_duration=None):
     """monkey patch `time` module to use out versions"""
     reset()
+    duration = fixed_duration
     time_mod.time = time
     time_mod.sleep = sleep
     time_mod.gmtime = gmtime
@@ -55,5 +60,6 @@ def monkey_restore():
     for k, v in originals.items():
         setattr(time_mod, k, v)
     
-    global epoch
+    global duration, epoch
     epoch = None
+    duration = None
