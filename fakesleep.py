@@ -61,6 +61,12 @@ def monkey_restore():
     
 @contextlib.contextmanager
 def fakesleep_context():
+    """context manager to temporarily use fakesleep.
+    
+    >>> with fakesleep_context():
+    ...     sleep(10)
+    ...        
+    """
     fakesleep.monkey_patch()
     yield
     fakesleep.monkey_restore()
