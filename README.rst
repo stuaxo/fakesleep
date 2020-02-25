@@ -16,6 +16,14 @@ actually sleep. It also guarrantees "correct" results for calls to
 
 To install, simply call `fakesleep.monkey_patch()`. To restore the real versions, call `fakesleep.monkey_restore()`.
 
+A context manager is available that runs the monkeypatching and restoring for you:
+
+>>> with fakesleep.fakesleep_context():
+...    sleep(10)
+...    # no time has has actually elapsed.
+
+
+
 :author: Pete Fein <pete@wearpants.org>
 :license: BSD
 :versions: Python 2.7 & 3
